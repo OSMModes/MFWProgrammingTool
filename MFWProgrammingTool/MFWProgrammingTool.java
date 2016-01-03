@@ -3,7 +3,7 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
-import controlP5.*; 
+import controlP5.*;
 import processing.serial.*; 
 
 import java.util.HashMap; 
