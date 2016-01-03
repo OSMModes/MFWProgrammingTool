@@ -1,4 +1,5 @@
 # MFWProgrammingTool
+![MFWProgrammingTool Screenshot](preview.png)
 A minimal RGB slider control for the Modes firmware.
 
 
