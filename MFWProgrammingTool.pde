@@ -7,6 +7,7 @@ int rval = 0;
 int gval = 0;
 int bval = 0;
 int output = 0;
+int serialPort = 0;
 PFont fontA;
 import processing.serial.*;
 Serial port;
@@ -14,54 +15,86 @@ ControlP5 controlP5;
 Textfield redNumberField;
 Textfield greenNumberField;
 Textfield blueNumberField;
+Textlabel errorText;
+DropdownList serialPortList;
+
+
+
 
 void setup() {
-size(480,180);
-controlP5 = new ControlP5(this);
-background(0);
-stroke(255);
-fill(255);
-rect(4,4,257,52);
-rect(4,64,257,52);
-rect(4,124,257,52);
-fontA = createFont("Verdana",26);
-textFont(fontA);
-textAlign(CENTER);
-
-frame.setTitle("MFWProgrammingTool");
-
-
-PFont font = createFont("arial",18);
-redNumberField = controlP5.addTextfield("RED")
-     .setPosition(275,15)
-     .setSize(40,30)
-     .setFont(font)
-     .setFocus(true)
-     .setColor(color(255,255,255));
+      size(480,200);
+      controlP5 = new ControlP5(this);
+      stroke(255);
+      fill(255);
+      rect(4,4,257,52);
+      rect(4,64,257,52);
+      rect(4,124,257,52);
+      fontA = createFont("Verdana",26);
+      textFont(fontA);
+      textAlign(CENTER);
+      
+      surface.setTitle("MFWProgrammingTool");
+      
+      
+      PFont font = createFont("arial",18);
+      PFont errorFont = createFont("arial", 12);
+      redNumberField = controlP5.addTextfield("RED")
+           .setPosition(275,15)
+           .setSize(40,30)
+           .setFont(font)
+           .setFocus(true)
+           .setColor(color(255,255,255));
+           
+      greenNumberField = controlP5.addTextfield("GREEN")
+           .setPosition(275,80)
+           .setSize(40,30)
+           .setFont(font)
+           .setFocus(true)
+           .setColor(color(255,255,255));
+           
+      blueNumberField = controlP5.addTextfield("BLUE")
+           .setPosition(275,135)
+           .setSize(40,30)
+           .setFont(font)
+           .setFocus(true)
+           .setColor(color(255,255,255));
+           
+     serialPortList = controlP5.addDropdownList("Serial")
+          .setPosition(350, 10)
+          ;
+          
      
-greenNumberField = controlP5.addTextfield("GREEN")
-     .setPosition(275,80)
-     .setSize(40,30)
-     .setFont(font)
-     .setFocus(true)
-     .setColor(color(255,255,255));
-     
-blueNumberField = controlP5.addTextfield("BLUE")
-     .setPosition(275,135)
-     .setSize(40,30)
-     .setFont(font)
-     .setFocus(true)
-     .setColor(color(255,255,255));
+     errorText = controlP5.addTextlabel("errorText", "", 2, 183)
+       .setFont(errorFont)
+       .setColor(color(255,0,0));
+          
+  customize(serialPortList); // customize the first list
 
 
-// this will allow for serial port communication with the arduino
-println("Available serial ports:");
-println(Serial.list());
-//selects the first port in the Serial.list() for use and speed of 115200
-port = new Serial(this, Serial.list()[1],115200);
+  // this will allow for serial port communication with the arduino
+  println("Available serial ports:");
+  println(Serial.list());
+  //selects the first port in the Serial.list() for use and speed of 115200
+  port = new Serial(this, Serial.list()[serialPort],115200);
+
+}
+
+
+void customize(DropdownList ddl) {
+  // a convenience function to customize a DropdownList
+  ddl.setBackgroundColor(color(190));
+  ddl.setItemHeight(20);
+  ddl.setBarHeight(15);
+  for (int i=1;i<Serial.list().length;i++) {
+    ddl.addItem(Serial.list()[i], i);
+  }
+  //ddl.scroll(0);
+  ddl.setColorBackground(color(60));
+  ddl.setColorActive(color(255, 128));
 }
 
 void draw() {
+  background(0);
 // this draws a circle wich displayed the mixed color that is being output to the Arduino
   fill(rval,gval,bval);
   ellipse(390,90,100,100);
@@ -90,6 +123,16 @@ void draw() {
 }
 
 void updateSliders() {
+}
+
+void mouseReleased() {
+  serialPort = int(serialPortList.getValue()); 
+  try {
+    port = new Serial(this, Serial.list()[serialPort],115200);
+  } catch (Exception e) {
+    String error = "Failed to connect to " + Serial.list()[serialPort];
+    errorText.setText(error);
+  }
 }
 
 void mouseDragged() {
