@@ -59,8 +59,8 @@ void setup() {
            .setFocus(true)
            .setColor(color(255,255,255));
            
-     serialPortList = controlP5.addDropdownList("Serial")
-          .setPosition(350, 10);
+     serialPortList = controlP5.addDropdownList("Serial").setSize(120,200)
+          .setPosition(340, 10);
           
      
      errorText = controlP5.addTextlabel("errorText", "", 2, 183)
