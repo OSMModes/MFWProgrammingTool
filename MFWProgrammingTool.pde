@@ -60,8 +60,7 @@ void setup() {
            .setColor(color(255,255,255));
            
      serialPortList = controlP5.addDropdownList("Serial")
-          .setPosition(350, 10)
-          ;
+          .setPosition(350, 10);
           
      
      errorText = controlP5.addTextlabel("errorText", "", 2, 183)
@@ -73,20 +72,36 @@ void setup() {
 
   // this will allow for serial port communication with the arduino
   println("Available serial ports:");
-  println(Serial.list());
+  println(Serial.list());  
+  
   //selects the first port in the Serial.list() for use and speed of 115200
   port = new Serial(this, Serial.list()[serialPort],115200);
 
 }
 
+String cleanedportname(String serials) {
+    String cleanedportname;
+     cleanedportname = serials.replace("/dev/","");
+     cleanedportname.contains("cu.");
+     cleanedportname = cleanedportname.replace("cu.","");
+     cleanedportname = cleanedportname.replace("tty.","");
+     return cleanedportname;
+}
 
 void customize(DropdownList ddl) {
   // a convenience function to customize a DropdownList
-  ddl.setBackgroundColor(color(190));
-  ddl.setItemHeight(20);
-  ddl.setBarHeight(15);
+  ddl.setBackgroundColor(color(200));
+  ddl.setItemHeight(15);
+  ddl.setBarHeight(20);
+  
+  
   for (int i=1;i<Serial.list().length;i++) {
-    ddl.addItem(Serial.list()[i], i);
+      String serial;
+      String portname;
+      serial = Serial.list()[i];
+      //cleanup port names for easy read
+      portname = cleanedportname(serial);
+      ddl.addItem(portname, i);
   }
   //ddl.scroll(0);
   ddl.setColorBackground(color(60));
