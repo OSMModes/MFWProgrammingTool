@@ -71,20 +71,34 @@ void setup() {
 
 
   // this will allow for serial port communication with the arduino
-  println("Available serial ports:");
-  println(Serial.list());  
+  //println("Available serial ports:");
+  //println(Serial.list());  
+   
+  setdefaultport();
   
   //selects the first port in the Serial.list() for use and speed of 115200
-  port = new Serial(this, Serial.list()[serialPort],115200);
+  //port = new Serial(this, Serial.list()[serialPort],115200);
 
 }
 
-String cleanedportname(String serials) {
+//Runs port port = new Serial(this, Serial.list()[i],115200); under /dev/cu.SLAB_USBtoUART
+void setdefaultport() {
+  for (int i=1;i<Serial.list().length;i++) {
+    String serial;
+    serial = Serial.list()[i];
+    if(Serial.list()[i].equals("/dev/cu.SLAB_USBtoUART")) {
+          port = new Serial(this, Serial.list()[i],115200);
+          break;
+    }
+  }
+}
+
+String cleanportname(String serials) {
     String cleanedportname;
      cleanedportname = serials.replace("/dev/","");
-     cleanedportname.contains("cu.");
-     cleanedportname = cleanedportname.replace("cu.","");
-     cleanedportname = cleanedportname.replace("tty.","");
+     //cleanedportname.contains("cu.");
+     //cleanedportname = cleanedportname.replace("cu.","");
+     //cleanedportname = cleanedportname.replace("tty.","");
      return cleanedportname;
 }
 
@@ -100,7 +114,7 @@ void customize(DropdownList ddl) {
       String portname;
       serial = Serial.list()[i];
       //cleanup port names for easy read
-      portname = cleanedportname(serial);
+      portname = cleanportname(serial);
       ddl.addItem(portname, i);
   }
   //ddl.scroll(0);
