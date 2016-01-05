@@ -84,6 +84,8 @@ void setup() {
 //Runs port port = new Serial(this, Serial.list()[i],115200); under /dev/cu.SLAB_USBtoUART
 void setdefaultport() {
   for (int i=1;i<Serial.list().length;i++) {
+    String serial;
+    serial = Serial.list()[i];
     if(Serial.list()[i].equals("/dev/cu.SLAB_USBtoUART")) {
           port = new Serial(this, Serial.list()[i],115200);
           break;
@@ -155,7 +157,8 @@ void updateSliders() {
 void mouseReleased() {
   serialPort = int(serialPortList.getValue()); 
   try {
-    port = new Serial(this, Serial.list()[serialPort],115200);
+    //port = new Serial(this, Serial.list()[serialPort],115200);
+    setdefaultport();
   } catch (Exception e) {
     String error = "Failed to connect to " + Serial.list()[serialPort];
     errorText.setText(error);
