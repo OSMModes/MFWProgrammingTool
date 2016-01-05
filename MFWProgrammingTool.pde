@@ -84,8 +84,6 @@ void setup() {
 //Runs port port = new Serial(this, Serial.list()[i],115200); under /dev/cu.SLAB_USBtoUART
 void setdefaultport() {
   for (int i=1;i<Serial.list().length;i++) {
-    String serial;
-    serial = Serial.list()[i];
     if(Serial.list()[i].equals("/dev/cu.SLAB_USBtoUART")) {
           port = new Serial(this, Serial.list()[i],115200);
           break;
